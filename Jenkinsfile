@@ -30,9 +30,10 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "printenv"
-                        sh "docker build -t keasar/numeric-app:${GIT_COMMIT} ."
-                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                        sh "docker push keasar/numeric-app:${GIT_COMMIT}"
+                       sh "docker build -t keasar/numeric-app:${GIT_COMMIT} ."
+sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+sh "docker push keasar/numeric-app:${GIT_COMMIT}"
+
                     }
                 }
             }
@@ -41,7 +42,8 @@ pipeline {
             steps {
                 
                     withKubeConfig([usernamePassword(credentialsId: 'kubeconfig')]) {
-                        sh "sed -i 's#replace#keasar/numeric-app:${GIT_COMMIT} #g' k8s_deployment_service.yaml"
+                        sh "sed -i 's#replace#keasar/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+
                         sh "kubectl apply -f k8s_deployment_service.yaml "
                         
                     }
