@@ -25,16 +25,17 @@ pipeline {
             }
         }
         
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def mvnHome = tool 'Maven' // Assuming 'Maven' is the name of your Maven tool installation in Jenkins
-                    withSonarQubeEnv('SonarQubeServer') {
-                        sh "${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=dev -Dsonar.projectName='dev'"
-                    }
-                }
+     stage('SonarQube Analysis') {
+    steps {
+        script {
+            def mvnHome = tool 'Maven' // Assuming 'Maven' is the name of your Maven tool installation in Jenkins
+            withSonarQubeEnv('sonarqube') {
+                sh "${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=dev -Dsonar.projectName='dev'"
             }
         }
+    }
+}
+
 
         stage('Docker build and Push')  { 
             steps {
