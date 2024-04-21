@@ -1,9 +1,8 @@
 pipeline {
     agent any
-enviornment{
-    SCANNER_HOME = tool 'sonar-scanner'
-
-}
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
     stages {
         stage('Build Artifact') {
             steps {
@@ -28,18 +27,16 @@ enviornment{
             }
         }
         
-     stage('SonarQube Analysis') {
-    steps {
-        script {
-            def mvnHome = tool 'Maven' // Assuming 'Maven' is the name of your Maven tool installation in Jenkins
-            withSonarQubeEnv('sonar') {
-              
-                sh ''' $SCANNER_HOME/bin/sonar-scanner ${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=dev -Dsonar.projectName='dev' '''
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def mvnHome = tool 'Maven' // Assuming 'Maven' is the name of your Maven tool installation in Jenkins
+                    withSonarQubeEnv('sonar') {
+                        sh """$SCANNER_HOME/bin/sonar-scanner ${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=dev -Dsonar.projectName='dev' """
+                    }
+                }
             }
         }
-    }
-}
-
 
         stage('Docker build and Push')  { 
             steps {
